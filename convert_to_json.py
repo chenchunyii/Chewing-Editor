@@ -47,8 +47,11 @@ def reload_chewing():
     except FileNotFoundError:
         print("錯誤：找不到 chewing-editor，請確認已安裝！")
 
-if __name__ == "__main__":
+def main():
     chinese_text = input("請輸入中文文字: ")
     json_entry = chinese_to_json(chinese_text)
     save_to_json(json_entry, json_path)
     reload_chewing()
+
+if __name__ == "__main__":
+    main()
