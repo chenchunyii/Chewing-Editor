@@ -48,15 +48,20 @@ def reload_chewing():
     except FileNotFoundError:
         print("錯誤：找不到 chewing-editor，請確認已安裝！")
         return False
-    except subprocess.CalledProcessError
+    except subprocess.CalledProcessError:
         print("執行 chewing-editor 時發生錯誤")
         return False
 
 def main():
-    chinese_text = input("請輸入中文文字: ")
-    json_entry = chinese_to_json(chinese_text)
-    save_to_json(json_entry, json_path)
-    reload_chewing()
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("新酷音詞庫編輯器")
+        chinese_text = input("請輸入中文文字: ")
+        json_entry = chinese_to_json(chinese_text)
+        save_to_json(json_entry, json_path)
+
+        if reload_chewing():
+            continue
 
 if __name__ == "__main__":
     main()
