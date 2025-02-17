@@ -44,8 +44,13 @@ def reload_chewing():
     try:
         subprocess.run(["chewing-editor"], check=True)
         print("已啟動 chewing-editor 以重新載入詞庫")
+        return True
     except FileNotFoundError:
         print("錯誤：找不到 chewing-editor，請確認已安裝！")
+        return False
+    except subprocess.CalledProcessError
+        print("執行 chewing-editor 時發生錯誤")
+        return False
 
 def main():
     chinese_text = input("請輸入中文文字: ")
