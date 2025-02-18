@@ -5,17 +5,22 @@ from pathlib import Path
 from pypinyin import pinyin, Style
 from dotenv import load_dotenv
 
-def chinese_to_json(text):
+def chinese_to_json(text: str) -> list:
+    text = text.split()
+    result = []
+
     """將中文文字轉換為 JSON 格式的注音資料，並在多個字之間加入空格"""
-    bopomofo_list = pinyin(text, style=Style.BOPOMOFO)
-    bopomofo_str = ' '.join([b[0] for b in bopomofo_list])  # 多個字之間加空格
+    for t in text:
+        bopomofo_list = pinyin(t, style=Style.BOPOMOFO)
+        bopomofo_str = ' '.join([b[0] for b in bopomofo_list])  # 多個字之間加空格
+        result.append({
+            "bopomofo": bopomofo_str,
+            "phrase": t
+        })
 
-    return {
-        "bopomofo": bopomofo_str,
-        "phrase": text
-    }
+    return result
 
-def save_to_json(new_entry, file_path):
+def save_to_json(new_entries: list, file_path):
     """將新的注音資料存入 chewing.json，並讓 chewing-editor 重新載入"""
     # 如果檔案已存在，則讀取原始資料
     if file_path.exists():
@@ -28,8 +33,9 @@ def save_to_json(new_entry, file_path):
         data = {"userphrase": []}
 
     # 檢查是否已存在相同 phrase，避免重複
-    if new_entry not in data["userphrase"]:
-        data["userphrase"].append(new_entry)
+    for entry in new_entries:
+        if entry not in data["userphrase"]:
+            data["userphrase"].append(entry)
 
     # 將更新後的資料寫入 chewing.json
     with open(file_path, "w", encoding="utf-8") as f:
@@ -77,7 +83,7 @@ def main():
         chinese_text = input("請輸入中文文字: ")
         json_entry = chinese_to_json(chinese_text)
         save_to_json(json_entry, CHEWING_EDITOR_JSON_PATH)
-        upload_to_drive(CHEWING_EDITOR_JSON_PATH, DRIVE_FOLDER, DRIVE_NAME)
+        # upload_to_drive(CHEWING_EDITOR_JSON_PATH, DRIVE_FOLDER, DRIVE_NAME)
 
         if reload_chewing():
             continue
