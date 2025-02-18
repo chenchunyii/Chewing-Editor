@@ -83,7 +83,7 @@ def main():
         chinese_text = input("請輸入中文文字: ")
         json_entry = chinese_to_json(chinese_text)
         save_to_json(json_entry, CHEWING_EDITOR_JSON_PATH)
-        # upload_to_drive(CHEWING_EDITOR_JSON_PATH, DRIVE_FOLDER, DRIVE_NAME)
+        upload_to_drive(CHEWING_EDITOR_JSON_PATH, DRIVE_FOLDER, DRIVE_NAME)
 
         if reload_chewing():
             continue
