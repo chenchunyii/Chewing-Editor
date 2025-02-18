@@ -3,9 +3,7 @@ import os
 import subprocess
 from pathlib import Path
 from pypinyin import pinyin, Style
-
-# 設定 JSON 檔案的絕對路徑（依你的環境調整）
-json_path = Path.home() / "文件" / "chewing_editor" / "chewing.json"
+from dotenv import load_dotenv
 
 def chinese_to_json(text):
     """將中文文字轉換為 JSON 格式的注音資料，並在多個字之間加入空格"""
@@ -52,13 +50,34 @@ def reload_chewing():
         print("執行 chewing-editor 時發生錯誤")
         return False
 
+def upload_to_drive(local_file, drive_file, drive_name):
+    """上傳檔案到 drive"""
+    try:
+        cmd = ["rclone", "copy", local_file, f"jokersaysjoke44_linux:{drive_file}"]
+        subprocess.run(cmd, check=True)
+        print(f"已上傳到 drive")
+        return True
+    except FileNotFoundError:
+        print("錯誤：找不到 rclone，請確認已安裝！")
+        return False
+    except subprocess.CalledProcessError:
+        print("執行 rclone 時發生錯誤")
+        return False
+
+
 def main():
     while True:
+        load_dotenv()
+        CHEWING_EDITOR_JSON_PATH = Path(os.getenv("CHEWING_EDITOR_JSON_PATH"))
+        DRIVE_FOLDER = os.getenv("DRIVE_FOLDER")
+        DRIVE_NAME = os.getenv("DRIVE_NAME")
+
         os.system('cls' if os.name == 'nt' else 'clear')
         print("新酷音詞庫編輯器")
         chinese_text = input("請輸入中文文字: ")
         json_entry = chinese_to_json(chinese_text)
-        save_to_json(json_entry, json_path)
+        save_to_json(json_entry, CHEWING_EDITOR_JSON_PATH)
+        upload_to_drive(CHEWING_EDITOR_JSON_PATH, DRIVE_FOLDER, DRIVE_NAME)
 
         if reload_chewing():
             continue
