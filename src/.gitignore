@@ -1,3 +1,4 @@
 claude.py
 .env
 chewing.json
+.gitignore
