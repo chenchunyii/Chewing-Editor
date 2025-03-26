@@ -59,7 +59,7 @@ def reload_chewing():
 def upload_to_drive(local_file, drive_file, drive_name):
     """上傳檔案到 drive"""
     try:
-        cmd = ["rclone", "copy", local_file, f"jokersaysjoke44_linux:{drive_file}"]
+        cmd = ["rclone", "copy", local_file, f"{drive_file}:{drive_name}"]
         subprocess.run(cmd, check=True)
         print(f"已上傳到 drive")
         return True
